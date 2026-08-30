@@ -1,0 +1,16 @@
+# IDE
+.vscode/
+
+# Byte-compiled
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+env/
+.venv
+
+# Project specific
+app/config/config.local.json
+*.backup
+*.bak

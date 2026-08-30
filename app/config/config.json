@@ -1,0 +1,114 @@
+{
+  "app": {
+    "name": "Modbus Gateway",
+    "version": "1.0.0",
+    "description": "Industrial Modbus to Cloud Gateway",
+    "log_level": "INFO"
+  },
+  "device": {
+    "table_id": 2,
+    "protocol": "tcp",
+    "host": "localhost",
+    "port": 5020,
+    "slave_id": 1,
+    "timeout": 3.0,
+    "description": "Power_Elec_6",
+    "registers": [
+      {
+        "name": "software_version",
+        "address": 0,
+        "type": "INPUT",
+        "data_type": "VERSION",
+        "unit": "",
+        "description": "Software version (e.g., 0x0106 = v1.6)"
+      },
+      {
+        "name": "modbus_table_version",
+        "address": 1,
+        "type": "INPUT",
+        "data_type": "UINT16",
+        "unit": "",
+        "description": "Modbus table version (should be 0x0002)"
+      },
+      {
+        "name": "mac_address",
+        "address": 2,
+        "type": "INPUT",
+        "data_type": "MAC_ADDRESS",
+        "register_count": 3,
+        "unit": "",
+        "description": "MAC address"
+      },
+      {
+        "name": "voltage_conn1_ch1",
+        "address": 352,
+        "type": "INPUT",
+        "data_type": "FLOAT32",
+        "byte_order": "ABCD",
+        "unit": "V",
+        "description": "RMS voltage - Connector 1 Channel 1"
+      },
+      {
+        "name": "voltage_conn1_ch2",
+        "address": 354,
+        "type": "INPUT",
+        "data_type": "FLOAT32",
+        "byte_order": "ABCD",
+        "unit": "V",
+        "description": "RMS voltage - Connector 1 Channel 2"
+      },
+      {
+        "name": "voltage_conn1_ch3",
+        "address": 356,
+        "type": "INPUT",
+        "data_type": "FLOAT32",
+        "byte_order": "ABCD",
+        "unit": "V",
+        "description": "RMS voltage - Connector 1 Channel 3"
+      },
+      {
+        "name": "frequency_conn1_ch1",
+        "address": 424,
+        "type": "INPUT",
+        "data_type": "FLOAT32",
+        "byte_order": "ABCD",
+        "unit": "Hz",
+        "description": "Frequency - Connector 1 Channel 1"
+      },
+      {
+        "name": "frequency_conn1_ch2",
+        "address": 426,
+        "type": "INPUT",
+        "data_type": "FLOAT32",
+        "byte_order": "ABCD",
+        "unit": "Hz",
+        "description": "Frequency - Connector 1 Channel 2"
+      },
+      {
+        "name": "frequency_conn1_ch3",
+        "address": 428,
+        "type": "INPUT",
+        "data_type": "FLOAT32",
+        "byte_order": "ABCD",
+        "unit": "Hz",
+        "description": "Frequency - Connector 1 Channel 3"
+      }
+    ]
+  },
+  "backend": {
+    "type": "websocket",
+    "url": "ws://localhost:8765",
+    "subprotocol": "",
+    "reconnect_interval": 5,
+    "timeout": 10,
+    "tls": false
+  },
+  "settings": {
+    "read_interval": 5,
+    "heartbeat_interval": 30,
+    "retry_count": 3,
+    "retry_delay": 2,
+    "max_recovery_attempts": 3,
+    "recovery_interval": 5
+  }
+}

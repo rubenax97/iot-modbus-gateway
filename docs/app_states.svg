@@ -1,0 +1,225 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="703pt" height="422pt" viewBox="0.00 0.00 702.92 422.00">
+<g id="graph0" class="graph" transform="translate(4,418) scale(1)" data-name="Combined">
+
+<polygon fill="white" stroke="none" points="-4,4 -4,-418 698.92,-418 698.92,4 -4,4" style=""/>
+<g id="clust1" class="cluster" data-name="cluster_state_machine">
+
+<polygon fill="none" stroke="#2c3e50" points="23.01,-210 23.01,-406 686.92,-406 686.92,-210 23.01,-210" style=""/>
+<text text-anchor="middle" x="354.97" y="-390.3" font-family="Helvetica,sans-Serif" font-size="13.00" style="">Main State Machine</text>
+</g>
+<g id="clust2" class="cluster" data-name="cluster_timers">
+
+<polygon fill="none" stroke="#2c3e50" points="0,-8 0,-202 255.38,-202 255.38,-8 0,-8" style=""/>
+<text text-anchor="middle" x="127.69" y="-186.3" font-family="Helvetica,sans-Serif" font-size="13.00" style="">Background Timer Tasks (3 Independent)</text>
+</g>
+<!-- INIT -->
+<g id="node1" class="node" pointer-events="visible" data-name="INIT">
+
+<path fill="#e8f4fd" stroke="black" d="M73.01,-294C73.01,-294 43.01,-294 43.01,-294 37.01,-294 31.01,-288 31.01,-282 31.01,-282 31.01,-270 31.01,-270 31.01,-264 37.01,-258 43.01,-258 43.01,-258 73.01,-258 73.01,-258 79.01,-258 85.01,-264 85.01,-270 85.01,-270 85.01,-282 85.01,-282 85.01,-288 79.01,-294 73.01,-294" style=""/>
+<text text-anchor="middle" x="58.01" y="-273" font-family="Helvetica,sans-Serif" font-size="10.00" style="">INIT</text>
+</g>
+<!-- IDLE -->
+<g id="node2" class="node" pointer-events="visible" data-name="IDLE">
+
+<path fill="#fff3cd" stroke="black" d="M215.86,-294C215.86,-294 185.86,-294 185.86,-294 179.86,-294 173.86,-288 173.86,-282 173.86,-282 173.86,-270 173.86,-270 173.86,-264 179.86,-258 185.86,-258 185.86,-258 215.86,-258 215.86,-258 221.86,-258 227.86,-264 227.86,-270 227.86,-270 227.86,-282 227.86,-282 227.86,-288 221.86,-294 215.86,-294" style=""/>
+<text text-anchor="middle" x="200.86" y="-273" font-family="Helvetica,sans-Serif" font-size="10.00" style="">IDLE</text>
+</g>
+<!-- INIT&#45;&gt;IDLE -->
+<g id="edge1" class="edge" data-name="INIT-&gt;IDLE">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M85.5,-276C106.95,-276 137.44,-276 161.54,-276" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="161.22,-279.5 171.22,-276 161.22,-272.5 161.22,-279.5" style=""/>
+</g>
+<!-- ERROR -->
+<g id="node5" class="node" pointer-events="visible" data-name="ERROR">
+
+<path fill="#dc3545" stroke="black" d="M555.04,-257C555.04,-257 525.04,-257 525.04,-257 519.04,-257 513.04,-251 513.04,-245 513.04,-245 513.04,-233 513.04,-233 513.04,-227 519.04,-221 525.04,-221 525.04,-221 555.04,-221 555.04,-221 561.04,-221 567.04,-227 567.04,-233 567.04,-233 567.04,-245 567.04,-245 567.04,-251 561.04,-257 555.04,-257" style=""/>
+<text text-anchor="middle" x="540.04" y="-236" font-family="Helvetica,sans-Serif" font-size="10.00" fill="white" style="">ERROR</text>
+</g>
+<!-- INIT&#45;&gt;ERROR -->
+<g id="edge2" class="edge" data-name="INIT-&gt;ERROR">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M85.26,-258.28C112.63,-241.54 157.39,-219 199.86,-219 199.86,-219 199.86,-219 439.32,-219 459.93,-219 482.49,-223.16 500.92,-227.68" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="499.91,-231.04 510.47,-230.18 501.68,-224.26 499.91,-231.04" style=""/>
+</g>
+<!-- SHUTDOWN -->
+<g id="node6" class="node" pointer-events="visible" data-name="SHUTDOWN">
+
+<path fill="#6c757d" stroke="black" d="M666.86,-351C666.86,-351 616.1,-351 616.1,-351 610.1,-351 604.1,-345 604.1,-339 604.1,-339 604.1,-327 604.1,-327 604.1,-321 610.1,-315 616.1,-315 616.1,-315 666.86,-315 666.86,-315 672.86,-315 678.86,-321 678.86,-327 678.86,-327 678.86,-339 678.86,-339 678.86,-345 672.86,-351 666.86,-351" style=""/>
+<text text-anchor="middle" x="641.48" y="-330" font-family="Helvetica,sans-Serif" font-size="10.00" fill="white" style="">SHUTDOWN</text>
+</g>
+<!-- INIT&#45;&gt;SHUTDOWN -->
+<g id="edge11" class="edge" data-name="INIT-&gt;SHUTDOWN">
+
+<path fill="none" stroke="#566573" stroke-width="1.5" stroke-dasharray="5,2" d="M72.83,-294.24C95.84,-322.34 144.93,-373 199.86,-373 199.86,-373 199.86,-373 541.04,-373 561.75,-373 583.24,-365.44 600.92,-356.9" style=""/>
+<polygon fill="#566573" stroke="#566573" stroke-width="1.5" points="602.37,-360.09 609.66,-352.4 599.16,-353.87 602.37,-360.09" style=""/>
+</g>
+<!-- READING -->
+<g id="node3" class="node" pointer-events="visible" data-name="READING">
+
+<path fill="#d4edda" stroke="black" d="M333.72,-304C333.72,-304 296.59,-304 296.59,-304 290.59,-304 284.59,-298 284.59,-292 284.59,-292 284.59,-280 284.59,-280 284.59,-274 290.59,-268 296.59,-268 296.59,-268 333.72,-268 333.72,-268 339.72,-268 345.72,-274 345.72,-280 345.72,-280 345.72,-292 345.72,-292 345.72,-298 339.72,-304 333.72,-304" style=""/>
+<text text-anchor="middle" x="315.16" y="-283" font-family="Helvetica,sans-Serif" font-size="10.00" style="">READING</text>
+</g>
+<!-- IDLE&#45;&gt;READING -->
+<g id="edge3" class="edge" data-name="IDLE-&gt;READING">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M228.19,-278.34C241.36,-279.52 257.61,-280.96 272.42,-282.28" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="271.9,-285.75 282.17,-283.15 272.52,-278.78 271.9,-285.75" style=""/>
+</g>
+<!-- IDLE&#45;&gt;ERROR -->
+<g id="edge4" class="edge" data-name="IDLE-&gt;ERROR">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M228.11,-262.04C244.26,-257.23 265.43,-252.84 284.38,-250 360.63,-238.57 450.78,-233.44 500.77,-234.15" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="500.52,-237.64 510.61,-234.4 500.7,-230.64 500.52,-237.64" style=""/>
+</g>
+<!-- IDLE&#45;&gt;SHUTDOWN -->
+<g id="edge12" class="edge" data-name="IDLE-&gt;SHUTDOWN">
+
+<path fill="none" stroke="#566573" stroke-width="1.5" stroke-dasharray="5,2" d="M216.05,-294.25C235.5,-317.02 272.79,-353 314.16,-353 314.16,-353 314.16,-353 541.04,-353 557.88,-353 576.02,-350.21 592.13,-346.71" style=""/>
+<polygon fill="#566573" stroke="#566573" stroke-width="1.5" points="592.85,-350.14 601.79,-344.45 591.25,-343.32 592.85,-350.14" style=""/>
+</g>
+<!-- STREAMING -->
+<g id="node4" class="node" pointer-events="visible" data-name="STREAMING">
+
+<path fill="#e8daef" stroke="black" d="M464.27,-314C464.27,-314 412.37,-314 412.37,-314 406.37,-314 400.37,-308 400.37,-302 400.37,-302 400.37,-290 400.37,-290 400.37,-284 406.37,-278 412.37,-278 412.37,-278 464.27,-278 464.27,-278 470.27,-278 476.27,-284 476.27,-290 476.27,-290 476.27,-302 476.27,-302 476.27,-308 470.27,-314 464.27,-314" style=""/>
+<text text-anchor="middle" x="438.32" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00" style="">STREAMING</text>
+</g>
+<!-- READING&#45;&gt;STREAMING -->
+<g id="edge5" class="edge" data-name="READING-&gt;STREAMING">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M346.11,-288.47C358.68,-289.51 373.65,-290.74 387.78,-291.91" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="387.39,-295.39 397.64,-292.73 387.96,-288.41 387.39,-295.39" style=""/>
+</g>
+<!-- READING&#45;&gt;ERROR -->
+<g id="edge6" class="edge" data-name="READING-&gt;ERROR">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M346.22,-279.66C386.21,-271.23 456.95,-256.31 500.73,-247.08" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="501.3,-250.54 510.36,-245.05 499.85,-243.69 501.3,-250.54" style=""/>
+</g>
+<!-- READING&#45;&gt;SHUTDOWN -->
+<g id="edge13" class="edge" data-name="READING-&gt;SHUTDOWN">
+
+<path fill="none" stroke="#566573" stroke-width="1.5" stroke-dasharray="5,2" d="M346.09,-302.37C361.83,-310.13 381.73,-318.64 400.59,-323 465.41,-337.99 542.65,-338.18 591.63,-336.19" style=""/>
+<polygon fill="#566573" stroke="#566573" stroke-width="1.5" points="591.66,-339.69 601.48,-335.74 591.33,-332.7 591.66,-339.69" style=""/>
+</g>
+<!-- STREAMING&#45;&gt;IDLE -->
+<g id="edge7" class="edge" data-name="STREAMING-&gt;IDLE">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M399.9,-306.79C368.73,-314.2 323.3,-321.33 284.38,-313 268.75,-309.66 252.5,-303.12 238.6,-296.46" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="240.55,-293.52 230.04,-292.17 237.41,-299.78 240.55,-293.52" style=""/>
+</g>
+<!-- STREAMING&#45;&gt;ERROR -->
+<g id="edge8" class="edge" data-name="STREAMING-&gt;ERROR">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" d="M471.42,-277.65C481.2,-272.06 492.04,-265.87 502.12,-260.11" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="503.75,-263.2 510.7,-255.2 500.28,-257.13 503.75,-263.2" style=""/>
+</g>
+<!-- STREAMING&#45;&gt;SHUTDOWN -->
+<g id="edge14" class="edge" data-name="STREAMING-&gt;SHUTDOWN">
+
+<path fill="none" stroke="#566573" stroke-width="1.5" stroke-dasharray="5,2" d="M476.68,-302.87C509.11,-308.84 556.27,-317.51 591.67,-324.02" style=""/>
+<polygon fill="#566573" stroke="#566573" stroke-width="1.5" points="590.96,-327.45 601.42,-325.82 592.22,-320.56 590.96,-327.45" style=""/>
+</g>
+<!-- ERROR&#45;&gt;IDLE -->
+<g id="edge9" class="edge" data-name="ERROR-&gt;IDLE">
+
+<path fill="none" stroke="#28a745" stroke-width="2.5" d="M512.88,-245.22C466.57,-250.6 367.27,-255.58 284.38,-268 270.31,-270.11 255.03,-273.07 241.48,-275.43" style=""/>
+<polygon fill="#28a745" stroke="#28a745" stroke-width="2.5" points="241.15,-271.94 231.85,-277.01 242.28,-278.85 241.15,-271.94" style=""/>
+</g>
+<!-- ERROR&#45;&gt;ERROR -->
+<g id="edge10" class="edge" data-name="ERROR-&gt;ERROR">
+
+<path fill="none" stroke="#ffa500" stroke-width="1.5" stroke-dasharray="5,2" d="M531.81,-257.15C530.54,-266.54 533.29,-275 540.04,-275 543.52,-275 545.94,-272.75 547.29,-269.28" style=""/>
+<polygon fill="#ffa500" stroke="#ffa500" stroke-width="1.5" points="550.77,-269.67 548.09,-259.42 543.79,-269.1 550.77,-269.67" style=""/>
+</g>
+<!-- ERROR&#45;&gt;SHUTDOWN -->
+<g id="edge15" class="edge" data-name="ERROR-&gt;SHUTDOWN">
+
+<path fill="none" stroke="#566573" stroke-width="1.5" stroke-dasharray="5,2" d="M560.22,-257.12C574.98,-271.08 595.61,-290.58 612.25,-306.31" style=""/>
+<polygon fill="#566573" stroke="#566573" stroke-width="1.5" points="609.71,-308.73 619.38,-313.05 614.52,-303.64 609.71,-308.73" style=""/>
+</g>
+<!-- HEARTBEAT -->
+<g id="node7" class="node" pointer-events="visible" data-name="HEARTBEAT">
+
+<path fill="#ffd700" stroke="black" d="M73.54,-116C73.54,-116 42.49,-116 42.49,-116 36.49,-116 30.49,-110 30.49,-104 30.49,-104 30.49,-92 30.49,-92 30.49,-86 36.49,-80 42.49,-80 42.49,-80 73.54,-80 73.54,-80 79.54,-80 85.54,-86 85.54,-92 85.54,-92 85.54,-104 85.54,-104 85.54,-110 79.54,-116 73.54,-116" style=""/>
+<text text-anchor="middle" x="58.01" y="-100.7" font-family="Helvetica,sans-Serif" font-size="9.00" style="">Heartbeat</text>
+<text text-anchor="middle" x="58.01" y="-89.9" font-family="Helvetica,sans-Serif" font-size="9.00" style="">(30s)</text>
+</g>
+<!-- HEARTBEAT_ACTION -->
+<g id="node10" class="node" pointer-events="visible" data-name="HEARTBEAT_ACTION">
+
+<path fill="#fff8dc" stroke="black" d="M221.39,-170C221.39,-170 180.33,-170 180.33,-170 174.33,-170 168.33,-164 168.33,-158 168.33,-158 168.33,-146 168.33,-146 168.33,-140 174.33,-134 180.33,-134 180.33,-134 221.39,-134 221.39,-134 227.39,-134 233.39,-140 233.39,-146 233.39,-146 233.39,-158 233.39,-158 233.39,-164 227.39,-170 221.39,-170" style=""/>
+<text text-anchor="middle" x="200.86" y="-149.3" font-family="Helvetica,sans-Serif" font-size="9.00" style="">Send Status</text>
+</g>
+<!-- HEARTBEAT&#45;&gt;HEARTBEAT_ACTION -->
+<g id="edge16" class="edge" data-name="HEARTBEAT-&gt;HEARTBEAT_ACTION">
+
+<path fill="none" stroke="#ffd700" stroke-width="1.5" d="M85.93,-99.86C104.64,-101.91 129.8,-106.21 150.34,-115.2 157.01,-118.12 163.62,-122.08 169.74,-126.32" style=""/>
+<polygon fill="#ffd700" stroke="#ffd700" stroke-width="1.5" points="167.56,-129.06 177.67,-132.24 171.75,-123.45 167.56,-129.06" style=""/>
+<text text-anchor="middle" x="131.68" y="-120.2" font-family="Times,serif" font-size="14.00" style="">→</text>
+</g>
+<!-- STATUS -->
+<g id="node8" class="node" pointer-events="visible" data-name="STATUS">
+
+<path fill="#87ceeb" stroke="black" d="M83.04,-57C83.04,-57 32.99,-57 32.99,-57 26.99,-57 20.99,-51 20.99,-45 20.99,-45 20.99,-33 20.99,-33 20.99,-27 26.99,-21 32.99,-21 32.99,-21 83.04,-21 83.04,-21 89.04,-21 95.04,-27 95.04,-33 95.04,-33 95.04,-45 95.04,-45 95.04,-51 89.04,-57 83.04,-57" style=""/>
+<text text-anchor="middle" x="58.01" y="-41.7" font-family="Helvetica,sans-Serif" font-size="9.00" style="">Status Monitor</text>
+<text text-anchor="middle" x="58.01" y="-30.9" font-family="Helvetica,sans-Serif" font-size="9.00" style="">(30s)</text>
+</g>
+<!-- STATUS_ACTION -->
+<g id="node11" class="node" pointer-events="visible" data-name="STATUS_ACTION">
+
+<path fill="#f0f8ff" stroke="black" d="M218.39,-92C218.39,-92 183.33,-92 183.33,-92 177.33,-92 171.33,-86 171.33,-80 171.33,-80 171.33,-68 171.33,-68 171.33,-62 177.33,-56 183.33,-56 183.33,-56 218.39,-56 218.39,-56 224.39,-56 230.39,-62 230.39,-68 230.39,-68 230.39,-80 230.39,-80 230.39,-86 224.39,-92 218.39,-92" style=""/>
+<text text-anchor="middle" x="200.86" y="-71.3" font-family="Helvetica,sans-Serif" font-size="9.00" style="">Log Status</text>
+</g>
+<!-- STATUS&#45;&gt;STATUS_ACTION -->
+<g id="edge18" class="edge" data-name="STATUS-&gt;STATUS_ACTION">
+
+<path fill="none" stroke="#87ceeb" stroke-width="1.5" d="M95.47,-31.45C112.56,-29.41 132.94,-29.19 150.34,-35.2 158.39,-37.98 166.13,-42.66 173,-47.83" style=""/>
+<polygon fill="#87ceeb" stroke="#87ceeb" stroke-width="1.5" points="170.69,-50.46 180.63,-54.14 175.15,-45.07 170.69,-50.46" style=""/>
+<text text-anchor="middle" x="131.68" y="-40.2" font-family="Times,serif" font-size="14.00" style="">→</text>
+</g>
+<!-- READ_TIMER -->
+<g id="node9" class="node" pointer-events="visible" data-name="READ_TIMER">
+
+<path fill="#2865a7" stroke="black" d="M77.04,-170C77.04,-170 38.99,-170 38.99,-170 32.99,-170 26.99,-164 26.99,-158 26.99,-158 26.99,-146 26.99,-146 26.99,-140 32.99,-134 38.99,-134 38.99,-134 77.04,-134 77.04,-134 83.04,-134 89.04,-140 89.04,-146 89.04,-146 89.04,-158 89.04,-158 89.04,-164 83.04,-170 77.04,-170" style=""/>
+<text text-anchor="middle" x="58.01" y="-154.7" font-family="Helvetica,sans-Serif" font-size="9.00" fill="white" style="">Read Cycle</text>
+<text text-anchor="middle" x="58.01" y="-143.9" font-family="Helvetica,sans-Serif" font-size="9.00" fill="white" style="">(5s)</text>
+</g>
+<!-- READ_TIMER&#45;&gt;IDLE -->
+<g id="edge20" class="edge" data-name="READ_TIMER-&gt;IDLE">
+
+<path fill="none" stroke="#2865a7" stroke-width="1.5" stroke-dasharray="5,2" d="M79.8,-170.3C103.62,-191.27 142.85,-225.81 169.96,-249.67" style=""/>
+<polygon fill="#2865a7" stroke="#2865a7" stroke-width="1.5" points="167.47,-252.15 177.29,-256.13 172.1,-246.89 167.47,-252.15" style=""/>
+<text text-anchor="middle" x="131.68" y="-236.2" font-family="Times,serif" font-size="14.00" style="">trigger</text>
+</g>
+<!-- HEARTBEAT_ACTION&#45;&gt;ERROR -->
+<g id="edge21" class="edge" data-name="HEARTBEAT_ACTION-&gt;ERROR">
+
+<path fill="none" stroke="#dc3545" stroke-width="1.5" stroke-dasharray="5,2" d="M233.57,-155.46C288.34,-162.13 403.59,-179.31 495.04,-214 497.26,-214.84 499.5,-215.78 501.73,-216.8" style=""/>
+<polygon fill="#dc3545" stroke="#dc3545" stroke-width="1.5" points="500.16,-219.92 510.66,-221.28 503.3,-213.66 500.16,-219.92" style=""/>
+<text text-anchor="middle" x="373.27" y="-185.2" font-family="Times,serif" font-size="14.00" style="">fail</text>
+</g>
+<!-- HEARTBEAT_ACTION&#45;&gt;HEARTBEAT -->
+<g id="edge17" class="edge" data-name="HEARTBEAT_ACTION-&gt;HEARTBEAT">
+
+<path fill="none" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="5,2" d="M168.13,-147.33C151.33,-144.21 130.6,-139.31 113.03,-132 106.89,-129.45 100.66,-126.22 94.72,-122.78" style=""/>
+<polygon fill="#ffd700" stroke="#ffd700" stroke-width="1.5" points="96.71,-119.9 86.36,-117.64 93.05,-125.86 96.71,-119.9" style=""/>
+<text text-anchor="middle" x="131.68" y="-148.2" font-family="Times,serif" font-size="14.00" style="">reset</text>
+</g>
+<!-- STATUS_ACTION&#45;&gt;ERROR -->
+<g id="edge22" class="edge" data-name="STATUS_ACTION-&gt;ERROR">
+
+<path fill="none" stroke="#dc3545" stroke-width="1.5" stroke-dasharray="5,2" d="M230.67,-81.61C282.42,-96.08 393.44,-130.75 476.04,-182 489.55,-190.38 502.86,-201.82 513.73,-212.24" style=""/>
+<polygon fill="#dc3545" stroke="#dc3545" stroke-width="1.5" points="511.07,-214.53 520.64,-219.08 515.99,-209.55 511.07,-214.53" style=""/>
+<text text-anchor="middle" x="373.27" y="-139.2" font-family="Times,serif" font-size="14.00" style="">fail</text>
+</g>
+<!-- STATUS_ACTION&#45;&gt;STATUS -->
+<g id="edge19" class="edge" data-name="STATUS_ACTION-&gt;STATUS">
+
+<path fill="none" stroke="#87ceeb" stroke-width="1.5" stroke-dasharray="5,2" d="M171.26,-66.89C152.84,-62.32 128.44,-56.25 107.1,-50.95" style=""/>
+<polygon fill="#87ceeb" stroke="#87ceeb" stroke-width="1.5" points="108.04,-47.58 97.49,-48.56 106.35,-54.37 108.04,-47.58" style=""/>
+<text text-anchor="middle" x="131.68" y="-66.2" font-family="Times,serif" font-size="14.00" style="">reset</text>
+</g>
+</g>
+</svg>

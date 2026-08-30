@@ -1,0 +1,8 @@
+Package          Version
+---------------- -------
+asyncio          4.0.0
+pip              26.2.1
+pymodbus         3.15.0
+pyserial         3.5
+tenacity         9.1.4
+websocket-client 1.9.1

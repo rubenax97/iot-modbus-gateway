@@ -1,0 +1,79 @@
+digraph GatewaySM {
+    rankdir=TB;
+    fontname="Helvetica";
+    fontsize=12;
+    node [shape=box, style="rounded", fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=10];
+    
+    // States with semantic colors
+    INIT [label="INIT\n(Initialization)\n\n• init_modbus()\n• init_backend()\n• send_system_info()", 
+          fillcolor="#E8F4FD", style="filled,rounded"];
+    
+    IDLE [label="IDLE\n(Waiting)\n\n• update_status()\n• reset_counters()\n• wait_for_cycle()", 
+          fillcolor="#FFF3CD", style="filled,rounded"];
+    
+    READING [label="READING\n(Data Acquisition)\n\n• read_registers()\n• process_data()\n• prepare_payload()", 
+             fillcolor="#D4EDDA", style="filled,rounded"];
+    
+    STREAMING [label="STREAMING\n(Data Transmission)\n\n• send_to_backend()\n• wait_response()\n• check_ack()", 
+               fillcolor="#E8DAEF", style="filled,rounded"];
+    
+    ERROR [label="ERROR\n(Communication Lost)\n\n• log_error()\n• retry_recovery()\n• check_connections()", 
+           fillcolor="#DC3545", fontcolor="white", style="filled,rounded"];
+    
+    SHUTDOWN [label="SHUTDOWN\n(Terminal State)\n\n• disconnect_all()\n• cleanup()\n• power_off()", 
+              fillcolor="#6C757D", fontcolor="white", style="filled,rounded", peripheries=2];
+    
+    START [shape=point, width=0.2];
+    
+    // Start transition
+    START -> INIT [label="gateway_start()", color="#000000"];
+    
+    // ----- Normal transitions (Blue) -----
+    edge [color="#2865a7", penwidth=1.5];
+    INIT -> IDLE [label="Both connected OK"];
+    INIT -> ERROR [label="Connection failed"];
+    
+    IDLE -> READING [label="Read interval\nreached"];
+    IDLE -> ERROR [label="Connection lost"];
+    
+    READING -> STREAMING [label="Data read\nsuccessfully"];
+    READING -> ERROR [label="Read failed"];
+    
+    STREAMING -> IDLE [label="Data sent\nsuccessfully"];
+    STREAMING -> ERROR [label="Send failed"];
+    
+    // ----- Recovery transitions (Green) -----
+    edge [color="#28A745", penwidth=2.5];
+    ERROR -> IDLE [label="Connections\nrestored"];
+    
+    // ----- Error self-transition (Orange dashed) -----
+    edge [color="#FFA500", penwidth=1.5, style="dashed"];
+    ERROR -> ERROR [label="Retry\nrecovery"];
+    
+    // ----- Shutdown transitions (Dark Gray) -----
+    edge [color="#566573", penwidth=1.5];
+    INIT -> SHUTDOWN [label="Shutdown\nrequested"];
+    IDLE -> SHUTDOWN [label="Shutdown\nrequested"];
+    READING -> SHUTDOWN [label="Shutdown\nrequested"];
+    STREAMING -> SHUTDOWN [label="Shutdown\nrequested"];
+    ERROR -> SHUTDOWN [label="Shutdown\nrequested"];
+    
+    // Legend
+    subgraph cluster_legend {
+        label="Legend";
+        fontsize=10;
+        color="#666666";
+        style=dashed;
+        
+        node [shape=plaintext, fontsize=9];
+        LEGEND [label=<
+            <table border="0" cellborder="0" cellspacing="0">
+                <tr><td><font color="#2865a7">■</font> Normal transitions</td></tr>
+                <tr><td><font color="#28A745">■</font> Recovery transitions</td></tr>
+                <tr><td><font color="#FFA500">■</font> Error retry (self-transition)</td></tr>
+                <tr><td><font color="#566573">■</font> Shutdown transitions</td></tr>
+            </table>
+        >];
+    }
+}

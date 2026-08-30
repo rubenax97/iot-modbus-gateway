@@ -1,0 +1,81 @@
+digraph Combined {
+    rankdir=LR;
+    fontname="Helvetica";
+    fontsize=12;
+    
+    // Main State Machine
+    subgraph cluster_state_machine {
+        label="Main State Machine";
+        fontsize=13;
+        color="#2C3E50";
+        style=solid;
+        
+        node [shape=box, style="rounded", fontname="Helvetica", fontsize=10];
+        
+        INIT [label="INIT", fillcolor="#E8F4FD", style="filled,rounded"];
+        IDLE [label="IDLE", fillcolor="#FFF3CD", style="filled,rounded"];
+        READING [label="READING", fillcolor="#D4EDDA", style="filled,rounded"];
+        STREAMING [label="STREAMING", fillcolor="#E8DAEF", style="filled,rounded"];
+        ERROR [label="ERROR", fillcolor="#DC3545", fontcolor="white", style="filled,rounded"];
+        SHUTDOWN [label="SHUTDOWN", fillcolor="#6C757D", fontcolor="white", style="filled,rounded"];
+        
+        // Transitions
+        edge [color="#2865a7", penwidth=1.5];
+        INIT -> IDLE;
+        INIT -> ERROR;
+        IDLE -> READING;
+        IDLE -> ERROR;
+        READING -> STREAMING;
+        READING -> ERROR;
+        STREAMING -> IDLE;
+        STREAMING -> ERROR;
+        
+        edge [color="#28A745", penwidth=2.5];
+        ERROR -> IDLE;
+        
+        edge [color="#FFA500", penwidth=1.5, style="dashed"];
+        ERROR -> ERROR;
+        
+        edge [color="#566573", penwidth=1.5];
+        INIT -> SHUTDOWN;
+        IDLE -> SHUTDOWN;
+        READING -> SHUTDOWN;
+        STREAMING -> SHUTDOWN;
+        ERROR -> SHUTDOWN;
+    }
+    
+    // Timers
+    subgraph cluster_timers {
+        label="Background Timer Tasks (3 Independent)";
+        fontsize=13;
+        color="#2C3E50";
+        style=solid;
+        
+        node [shape=box, style="rounded", fontname="Helvetica", fontsize=9];
+        
+        HEARTBEAT [label="Heartbeat\n(30s)", fillcolor="#FFD700", style="filled,rounded"];
+        STATUS [label="Status Monitor\n(30s)", fillcolor="#87CEEB", style="filled,rounded"];
+        READ_TIMER [label="Read Cycle\n(5s)", fillcolor="#2865a7", fontcolor="white", style="filled,rounded"];
+        
+        // Timer actions
+        HEARTBEAT_ACTION [label="Send Status", fillcolor="#FFF8DC", style="filled,rounded"];
+        STATUS_ACTION [label="Log Status", fillcolor="#F0F8FF", style="filled,rounded"];
+        
+        // Timer flows
+        edge [color="#FFD700", penwidth=1.5];
+        HEARTBEAT -> HEARTBEAT_ACTION [label="→"];
+        HEARTBEAT_ACTION -> HEARTBEAT [label="reset", style="dashed"];
+        
+        edge [color="#87CEEB", penwidth=1.5];
+        STATUS -> STATUS_ACTION [label="→"];
+        STATUS_ACTION -> STATUS [label="reset", style="dashed"];
+        
+        edge [color="#2865a7", penwidth=1.5, style="dashed"];
+        READ_TIMER -> IDLE [label="trigger"];
+        
+        // Error connections
+        edge [color="#DC3545", penwidth=1.5, style="dashed"];
+        HEARTBEAT_ACTION -> ERROR [label="fail"];
+        STATUS_ACTION -> ERROR [label="fail"];
+    }
+}
