@@ -5,238 +5,196 @@ import logging
 import ssl
 from typing import Optional, Dict, Any, Callable
 from datetime import datetime
-import threading
-import time
 
-import websocket
+from websockets.asyncio.client import ClientConnection, connect
+from websockets.exceptions import ConnectionClosed
+from websockets.protocol import State
+from websockets.typing import Subprotocol
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from .models import BackendConfig, BackendType
 
 logger = logging.getLogger(__name__)
 
+
 class BackendClient(ABC):
     """Abstract base class for backend clients."""
-    
+
     def __init__(self, config: BackendConfig):
         self.config = config
         self.is_connected = False
-        self._lock = asyncio.Lock()
-    
+
     @abstractmethod
-    async def connect(self) -> bool:
-        """Connect to the backend."""
-        pass
-    
+    async def connect(self) -> bool: ...
+
     @abstractmethod
-    async def send_data(self, data: Dict[str, Any]) -> bool:
-        """Send data to the backend."""
-        pass
-    
+    async def send_data(self, data: Dict[str, Any]) -> bool: ...
+
     @abstractmethod
-    async def disconnect(self):
-        """Disconnect from the backend."""
-        pass
-    
+    async def disconnect(self): ...
+
     @abstractmethod
-    async def health_check(self) -> bool:
-        """Check if the backend is healthy."""
-        pass
+    async def health_check(self) -> bool: ...
+
 
 class WebSocketBackendClient(BackendClient):
-    """Async WebSocket backend client."""
-    
+    """Async WebSocket backend client built on `websockets` 14+."""
+
     def __init__(self, config: BackendConfig):
         super().__init__(config)
-        self.ws = None
-        self._thread = None
-        self._running = False
-        self._message_queue = asyncio.Queue()
-        self._connected_event = asyncio.Event()
-        self._callbacks = {
+        self.ws: Optional[ClientConnection] = None
+        self._recv_task: Optional[asyncio.Task] = None
+        self._callbacks: Dict[str, Optional[Callable]] = {
             'on_message': None,
             'on_error': None,
             'on_connect': None,
-            'on_disconnect': None
+            'on_disconnect': None,
         }
-        self._main_loop = None
-        self._ws_lock = asyncio.Lock()
-    
-    def _on_message(self, ws, message):
-        """Handle incoming WebSocket messages."""
-        logger.debug(f"Received message: {message}")
-        callback = self._callbacks.get('on_message')
-        if callback and self._main_loop and self._main_loop.is_running():
-            try:
-                data = json.loads(message)
-                asyncio.run_coroutine_threadsafe(callback(data), self._main_loop)
-            except json.JSONDecodeError:
-                asyncio.run_coroutine_threadsafe(callback(message), self._main_loop)
-    
-    def _on_error(self, ws, error):
-        """Handle WebSocket errors."""
-        logger.error(f"WebSocket error: {error}")
-        callback = self._callbacks.get('on_error')
-        if callback and self._main_loop and self._main_loop.is_running():
-            asyncio.run_coroutine_threadsafe(callback(str(error)), self._main_loop)
-    
-    def _on_close(self, ws, close_status_code, close_msg):
-        """Handle WebSocket connection close."""
-        logger.info(f"WebSocket connection closed: {close_status_code} - {close_msg}")
-        self.is_connected = False
-        self._connected_event.clear()
-        callback = self._callbacks.get('on_disconnect')
-        if callback and self._main_loop and self._main_loop.is_running():
-            asyncio.run_coroutine_threadsafe(callback(), self._main_loop)
-    
-    def _on_open(self, ws):
-        """Handle WebSocket connection open."""
-        logger.info(f"WebSocket connected to {self.config.url}")
-        self.is_connected = True
-        self._connected_event.set()
-        callback = self._callbacks.get('on_connect')
-        if callback and self._main_loop and self._main_loop.is_running():
-            asyncio.run_coroutine_threadsafe(callback(), self._main_loop)
-    
-    def _run_websocket(self):
-        """Run the WebSocket connection in a separate thread."""
-        try:
-            # Don't pass subprotocols if they're None, empty, or invalid
-            subprotocols = None
-            if self.config.subprotocol and self.config.subprotocol.strip():
-                subprotocols = [self.config.subprotocol]
-            
-            self.ws = websocket.WebSocketApp(
-                self.config.url,
-                subprotocols=subprotocols,
-                on_message=self._on_message,
-                on_error=self._on_error,
-                on_close=self._on_close,
-                on_open=self._on_open
-            )
-            
-            sslopt = {"cert_reqs": ssl.CERT_NONE} if self.config.tls else None
-            
-            # Run the WebSocket connection
-            self.ws.run_forever(
-                sslopt=sslopt,
-                ping_interval=30,
-                ping_timeout=10
-            )
-        except Exception as e:
-            logger.error(f"WebSocket thread error: {e}")
-        finally:
-            self._running = False
-            self.is_connected = False
-    
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=1, max=5)
-    )
-    async def connect(self) -> bool:
-        """Connect to WebSocket server with retry."""
-        if self.is_connected:
-            return True
-        
-        try:
-            self._running = True
-            self._connected_event.clear()
-            
-            # Store the main event loop for callbacks
-            self._main_loop = asyncio.get_running_loop()
-            
-            # Start WebSocket in a separate thread
-            self._thread = threading.Thread(target=self._run_websocket, daemon=True)
-            self._thread.start()
-            
-            # Wait for connection with timeout
-            try:
-                await asyncio.wait_for(self._connected_event.wait(), timeout=10.0)
-                return True
-            except asyncio.TimeoutError:
-                logger.error("Timeout waiting for WebSocket connection")
-                self._running = False
-                return False
-                
-        except Exception as e:
-            logger.error(f"Failed to connect to WebSocket: {e}")
-            return False
-    
-    async def send_data(self, data: Dict[str, Any]) -> bool:
-        """Send data via WebSocket."""
-        async with self._ws_lock:
-            if not self.is_connected or self.ws is None:
-                logger.warning("WebSocket not connected, queueing message")
-                await self._message_queue.put(data)
-                return False
-            
-            try:
-                if "timestamp" not in data:
-                    data["timestamp"] = datetime.now().isoformat()
-                
-                message = json.dumps(data)
-                self.ws.send(message)
-                logger.debug(f"Data sent via WebSocket")
-                return True
-                
-            except Exception as e:
-                logger.error(f"Error sending WebSocket message: {e}")
-                await self._message_queue.put(data)
-                return False
-    
-    async def disconnect(self):
-        """Disconnect from WebSocket server."""
-        self._running = False
-        if self.ws:
-            try:
-                self.ws.close()
-            except:
-                pass
-        self.is_connected = False
-        self._connected_event.clear()
-        logger.info("WebSocket disconnected")
-    
-    async def health_check(self) -> bool:
-        """Check if WebSocket is connected."""
-        return self.is_connected
-    
+
+    # ----------------------------------------------------------
+    # callbacks 
+    # ----------------------------------------------------------
+
     def set_callback(self, event: str, callback: Callable):
-        """Set callback for WebSocket events."""
         if event in self._callbacks:
             self._callbacks[event] = callback
+
+    async def _fire(self, event: str, *args):
+        cb = self._callbacks.get(event)
+        if cb is None:
+            return
+        try:
+            result = cb(*args)
+            if asyncio.iscoroutine(result):
+                await result
+        except Exception as e:
+            logger.error(f"Callback '{event}' raised: {e}")
+
+    # ----------------------------------------------------------
+    # helpers 
+    # ----------------------------------------------------------
     
-    async def process_queue(self):
-        """Process queued messages."""
-        while self._running:
-            try:
-                # Wait for message with timeout to allow checking _running
+    def _is_open(self) -> bool:
+        """True iff the socket exists and is in the OPEN state."""
+        return self.ws is not None and self.ws.state is State.OPEN
+
+    def _build_ssl_context(self) -> Optional[ssl.SSLContext]:
+        if not self.config.tls:
+            return None
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        return ctx
+
+    # ----------------------------------------------------------
+    # lifecycle
+    # ----------------------------------------------------------
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=5),
+    )
+    async def connect(self) -> bool:
+        if self.is_connected and self._is_open():
+            return True
+
+        subprotocols = None
+        if self.config.subprotocol and self.config.subprotocol.strip():
+            subprotocols = [Subprotocol(self.config.subprotocol)]
+
+        try:
+            self.ws = await connect(
+                self.config.url,
+                subprotocols=subprotocols,
+                open_timeout=self.config.timeout,
+                ssl=self._build_ssl_context(),
+                ping_interval=30,
+                ping_timeout=10,
+                max_size=None,
+            )
+        except Exception as e:
+            logger.error(f"WebSocket connect failed: {e}")
+            self.is_connected = False
+            self.ws = None
+            return False
+
+        self.is_connected = True
+        logger.info(f"WebSocket connected to {self.config.url}")
+
+        self._recv_task = asyncio.create_task(self._recv_loop())
+        await self._fire('on_connect')
+        return True
+
+    async def _recv_loop(self):
+        try:
+            if self.ws is None:
+                logger.error("WebSocket receive loop started but ws is None")
+                return
+            async for message in self.ws:
                 try:
-                    message = await asyncio.wait_for(self._message_queue.get(), timeout=1.0)
-                except asyncio.TimeoutError:
-                    continue
-                
-                if self.is_connected and self.ws is not None:
-                    success = await self.send_data(message)
-                    if not success:
-                        await self._message_queue.put(message)
-                else:
-                    # Re-queue if not connected
-                    await self._message_queue.put(message)
-                    await asyncio.sleep(1)
-                    
-            except asyncio.CancelledError:
-                break
+                    data = json.loads(message)
+                except json.JSONDecodeError:
+                    data = message
+                await self._fire('on_message', data)
+        except ConnectionClosed as e:
+            logger.info(f"WebSocket closed: {e}")
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            logger.error(f"WebSocket receive error: {e}")
+            await self._fire('on_error', str(e))
+        finally:
+            self.is_connected = False
+            await self._fire('on_disconnect')
+
+    async def send_data(self, data: Dict[str, Any]) -> bool:
+        if not self.is_connected or not self._is_open():
+            logger.warning("WebSocket not connected, dropping message")
+            return False
+
+        try:
+            if "timestamp" not in data:
+                data["timestamp"] = datetime.now().isoformat()
+            
+            if self.ws is None:
+                logger.error("WebSocket send_data called but ws is None")
+                return False
+            
+            await self.ws.send(json.dumps(data))
+            logger.debug("Data sent via WebSocket")
+            return True
+        except Exception as e:
+            logger.error(f"Error sending WebSocket message: {e}")
+            self.is_connected = False
+            return False
+
+    async def disconnect(self):
+        self.is_connected = False
+
+        if self._recv_task and not self._recv_task.done():
+            self._recv_task.cancel()
+            try:
+                await self._recv_task
+            except (asyncio.CancelledError, Exception):
+                pass
+        self._recv_task = None
+
+        if self.ws is not None:
+            try:
+                await self.ws.close()
             except Exception as e:
-                logger.error(f"Error processing queue: {e}")
-                await asyncio.sleep(5)
+                logger.debug(f"Error closing WebSocket: {e}")
+            self.ws = None
+
+        logger.info("WebSocket disconnected")
+
+    async def health_check(self) -> bool:
+        return self.is_connected and self._is_open()
+
 
 class BackendClientFactory:
-    """Factory for creating backend clients."""
-    
     @staticmethod
     def create_client(config: BackendConfig) -> BackendClient:
-        """Create a backend client based on configuration."""
         if config.type == BackendType.WEBSOCKET:
             return WebSocketBackendClient(config)
-        else:
-            raise ValueError(f"Unsupported backend type: {config.type}")
+        raise ValueError(f"Unsupported backend type: {config.type}")
